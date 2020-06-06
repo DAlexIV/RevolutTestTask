@@ -44,6 +44,9 @@ Features:
 2. Change the currency number to convert one amount to all the currencies
   * For this feature I'll store the currency of changed rate and it's number in the ViewModel field and update and rearrange rates accordingly. I think it doesn't worth to extract this logic to the Interactor or Repository, since it's not complex and I don't think that we should cache that data.
   * Talking about cache I think it's worth to save rates in the Repository to enable some minimal offline mode for the application.
+
+We probably could also create separate gradle modules for data, usecase and presentation layers for this feature
+to achieve better build time and code separation, but I'll skip this to save time during development
     
     
 Other things that we definitely need if this app will be in production:
