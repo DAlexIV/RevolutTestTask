@@ -1,9 +1,11 @@
 package com.example.revoluttask
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
-import com.example.revoluttask.data.NetworkDataSourceImpl
-import com.example.revoluttask.data.RatesNetworkService
+import androidx.appcompat.app.AppCompatActivity
+import com.example.revoluttask.data.*
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -13,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val repo = NetworkDataSourceImpl(
+        val networkDataSource = NetworkBasicCurrencyDataSource(
             Retrofit.Builder()
                 .baseUrl("https://hiring.revolut.codes/api/")
                 .addConverterFactory(MoshiConverterFactory.create())
@@ -21,8 +23,18 @@ class MainActivity : AppCompatActivity() {
                 .create(RatesNetworkService::class.java)
         )
 
-        Thread {
-            repo.getRates()
-        }.start()
+        val ratesType = Types.newParameterizedType(
+            List::class.java,
+            BasicCurrencyRate::class.java
+        )
+        val moshi = Moshi.Builder().build();
+        val localDataSource = LocalBasicCurrencyDataSource(
+            applicationContext.getSharedPreferences("RATES", Context.MODE_PRIVATE),
+            moshi.adapter(ratesType)
+        )
+        val currencyRateRepo =
+            CurrencyRateRepoImpl(networkDataSource, localDataSource, applicationContext)
+
+        currencyRateRepo.getRates().observeForever(::println)
     }
 }

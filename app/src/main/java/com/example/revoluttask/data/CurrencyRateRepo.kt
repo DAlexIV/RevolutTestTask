@@ -1,5 +1,7 @@
 package com.example.revoluttask.data
 
+import androidx.lifecycle.LiveData
+
 interface CurrencyRateRepo {
-    fun getRates() : List<CurrencyRate>
+    fun getRates() : LiveData<Resource<List<CurrencyRate>>>
 }
