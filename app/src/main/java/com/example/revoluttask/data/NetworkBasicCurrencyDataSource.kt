@@ -8,8 +8,8 @@ import retrofit2.Response
 class NetworkBasicCurrencyDataSource(private val ratesNetworkService: RatesNetworkService) :
     BasicCurrencyDataSource {
 
-    override fun getRates(): LiveData<Resource<List<BasicCurrencyRate>>> {
-        val rates = MutableLiveData<Resource<List<BasicCurrencyRate>>>()
+    override fun getRates(): LiveData<Resource<BasicRatesData>> {
+        val rates = MutableLiveData<Resource<BasicRatesData>>()
         rates.value = Resource.loading(null)
 
         ratesNetworkService.getRates().enqueue(object : retrofit2.Callback<RatesRequestResult> {
@@ -29,7 +29,8 @@ class NetworkBasicCurrencyDataSource(private val ratesNetworkService: RatesNetwo
                         .toMutableList()
                     responseRates
                         .add(BasicCurrencyRate(response.body()?.baseCurrencyString ?: "", 1.0))
-                    rates.value = Resource.success(responseRates)
+                    rates.value =
+                        Resource.success(BasicRatesData(System.currentTimeMillis(), responseRates))
                 }
             }
         })

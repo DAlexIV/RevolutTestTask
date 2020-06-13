@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.revoluttask.data.CurrencyRate
 import com.example.revoluttask.data.CurrencyRateRepo
+import com.example.revoluttask.data.RatesData
 import com.example.revoluttask.data.Resource
 
 class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() {
-    private val manuallyEnteredValues = MutableLiveData<Resource<List<CurrencyRate>>>()
-    private var latestNetworkState: List<CurrencyRate>? = null
+    private val manuallyEnteredValues = MutableLiveData<Resource<RatesData>>()
+    private var latestNetworkState: RatesData? = null
 
-    fun getRates(): LiveData<Resource<List<CurrencyRate>>> {
-        val mediatorLiveData = MediatorLiveData<Resource<List<CurrencyRate>>>()
+    fun getRates(): LiveData<Resource<RatesData>> {
+        val mediatorLiveData = MediatorLiveData<Resource<RatesData>>()
         mediatorLiveData.addSource(manuallyEnteredValues) { value ->
             mediatorLiveData.value = value
         }
@@ -23,25 +23,25 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
                 latestNetworkState = value.data
             }
         }
-        return mediatorLiveData;
+        return mediatorLiveData
     }
 
     fun enterCurrencyValue(value: Double, tickerString: String) {
-        latestNetworkState?.let { rates ->
+        latestNetworkState?.let { ratesData ->
             val oldValue =
-                rates.first { currencyRate ->
+                ratesData.rates.first { currencyRate ->
                     currencyRate.basicCurrencyRate.tickerString == tickerString
                 }.basicCurrencyRate.rate
 
             val coef = value / oldValue
-            val updatedRates = rates.map { currencyRate ->
+            val updatedRates = ratesData.rates.map { currencyRate ->
                 val newRate = (currencyRate.basicCurrencyRate.rate * coef)
                 currencyRate.copy(
                     basicCurrencyRate =
                     currencyRate.basicCurrencyRate.copy(rate = newRate)
                 )
             }
-            manuallyEnteredValues.value = Resource.success(updatedRates)
+            manuallyEnteredValues.value = Resource.success(ratesData.copy(rates = updatedRates))
             return
         }
 

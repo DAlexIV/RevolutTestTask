@@ -24,11 +24,11 @@ class CurrencyRateRepoImpl(
         }
     }
 
-    override fun getRates(): LiveData<Resource<List<CurrencyRate>>> {
-        val mediatorLiveData = MediatorLiveData<Resource<List<BasicCurrencyRate>>>()
+    override fun getRates(): LiveData<Resource<RatesData>> {
+        val mediatorLiveData = MediatorLiveData<Resource<BasicRatesData>>()
         mediatorLiveData.addSource(networkBasicCurrencyDataSource.getRates()) { value ->
             if (value.status == Resource.Status.SUCCESS) {
-                localBasicCurrencyDataSource.setRates(value.data!!);
+                localBasicCurrencyDataSource.setBasicRatesData(value.data!!);
             }
             mediatorLiveData.value = value
         }
@@ -41,7 +41,8 @@ class CurrencyRateRepoImpl(
                 Resource.Status.ERROR -> Resource.error(resource.message ?: "", null)
                 Resource.Status.LOADING -> Resource.loading(null)
                 Resource.Status.SUCCESS -> {
-                    val currencyRateList = resource.data?.map { basicCurrencyRate ->
+                    val data = resource.data!!
+                    val currencyRateList = data.rates?.map { basicCurrencyRate ->
                         CurrencyRate(
                             basicCurrencyRate,
                             descriptionMap[basicCurrencyRate.tickerString] ?: "",
@@ -50,10 +51,10 @@ class CurrencyRateRepoImpl(
                                 "drawable", BuildConfig.APPLICATION_ID
                             )
                         )
-                    }
+                    } ?: emptyList()
 
 
-                    Resource.success(currencyRateList)
+                    Resource.success(RatesData(data.timestamp, currencyRateList))
                 }
             }
         };

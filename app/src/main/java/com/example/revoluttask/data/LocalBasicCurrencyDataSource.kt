@@ -12,21 +12,26 @@ class LocalBasicCurrencyDataSource(
 ) : BasicCurrencyDataSource {
     companion object {
         private const val RATES = "RATES"
+        private const val TIMESTAMP = "TIMESTAMP"
     }
 
-    fun setRates(rates: List<BasicCurrencyRate>) {
+    fun setBasicRatesData(basicRatesData: BasicRatesData) {
         prefs.edit {
-            putString(RATES, jsonAdapter.toJson(rates))
+            putString(RATES, jsonAdapter.toJson(basicRatesData.rates))
+            putLong(TIMESTAMP, basicRatesData.timestamp)
         }
     }
 
     // I think it may be better not to use livedata here,
     // but for the sake of unification I'll leave it like that
-    override fun getRates(): LiveData<Resource<List<BasicCurrencyRate>>> {
-        val liveData = MutableLiveData<Resource<List<BasicCurrencyRate>>>()
+    override fun getRates(): LiveData<Resource<BasicRatesData>> {
+        val liveData = MutableLiveData<Resource<BasicRatesData>>()
         if (prefs.contains(RATES)) {
             liveData.value = Resource.success(
-                jsonAdapter.fromJson(prefs.getString(RATES, "") ?: "")
+                BasicRatesData(
+                    prefs.getLong(TIMESTAMP, 0),
+                    jsonAdapter.fromJson(prefs.getString(RATES, "") ?: "")
+                )
             )
         } else {
             liveData.value = Resource.loading(null)
