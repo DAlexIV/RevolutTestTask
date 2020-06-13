@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rate_item_height">72dp</dimen>
+    <dimen name="flag_size">40dp</dimen>
+    <dimen name="rates_flag_margin">16dp</dimen>
+    <dimen name="rates_ticker_margin">16dp</dimen>
+    <dimen name="rates_amount_margin">16dp</dimen>
+</resources>

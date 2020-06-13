@@ -1,33 +1,31 @@
 package com.example.revoluttask.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.revoluttask.R
+import com.example.revoluttask.data.Resource
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val handler = Handler(Looper.getMainLooper())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val viewModel: RatesViewModel by viewModels {
             ViewModelFactory(applicationContext)
         }
 
-        viewModel.getRates().observeForever { rates ->
-            println(rates)
-        }
+        rates_recycler.layoutManager = LinearLayoutManager(this)
+        val adapter = RatesAdapter(viewModel::enterCurrencyValue)
+        adapter.setHasStableIds(true)
+        rates_recycler.adapter = adapter
 
-        // Delete later
-        var wasChanged = false
-        handler.postDelayed({
-            if (!wasChanged) {
-                wasChanged = true
-                viewModel.enterCurrencyValue(100.0, "RUB")
+        viewModel.getRates().observeForever { resource ->
+            if (resource.status == Resource.Status.SUCCESS) {
+                (rates_recycler.adapter as RatesAdapter).rates = resource.data?.toMutableList()!!
             }
-        }, 1000)
+        }
     }
 }

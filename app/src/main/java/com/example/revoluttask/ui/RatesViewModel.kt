@@ -4,12 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.revoluttask.data.BasicCurrencyRate
 import com.example.revoluttask.data.CurrencyRate
 import com.example.revoluttask.data.CurrencyRateRepo
 import com.example.revoluttask.data.Resource
-import java.lang.IllegalStateException
-import com.example.revoluttask.DoubleExt.round
 
 class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() {
     private val manuallyEnteredValues = MutableLiveData<Resource<List<CurrencyRate>>>()
@@ -38,7 +35,7 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
 
             val coef = value / oldValue
             val updatedRates = rates.map { currencyRate ->
-                val newRate = (currencyRate.basicCurrencyRate.rate * coef).round(3)
+                val newRate = (currencyRate.basicCurrencyRate.rate * coef)
                 currencyRate.copy(
                     basicCurrencyRate =
                     currencyRate.basicCurrencyRate.copy(rate = newRate)

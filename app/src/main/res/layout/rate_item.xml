@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--For performance reasons we may replace ConstraintLayout here with RelativeLayout in future-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/rate_item_height"
+    tools:context=".ui.MainActivity">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/flag"
+        android:layout_width="@dimen/flag_size"
+        android:layout_height="@dimen/flag_size"
+        android:layout_marginStart="@dimen/rates_flag_margin"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="20dp"
+        tools:src="@drawable/usd" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/ticker"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/rates_ticker_margin"
+        android:lineSpacingExtra="5sp"
+        android:textAppearance="@style/TickerStyle"
+        android:translationY="-2.62sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/flag"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="USD" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="@dimen/rates_ticker_margin"
+        android:lineSpacingExtra="4sp"
+        android:textAppearance="@style/TickerDescriptionStyle"
+        android:translationY="-1.8sp"
+        app:layout_constraintLeft_toRightOf="@id/flag"
+        app:layout_constraintTop_toBottomOf="@id/ticker"
+        tools:text="US Dollar" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/rates_amount_margin"
+        android:layout_marginEnd="@dimen/rates_amount_margin"
+        android:descendantFocusability="beforeDescendants"
+        android:digits="0123456789."
+        android:focusableInTouchMode="true"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:lineSpacingExtra="5sp"
+        android:singleLine="true"
+        android:textAlignment="textEnd"
+        android:textAppearance="@style/AmountStyle"
+        android:translationY="-2.28sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1183.06" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

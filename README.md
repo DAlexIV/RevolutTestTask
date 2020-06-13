@@ -29,7 +29,7 @@ Features:
 1. View latest currency rates
 2. Change the currency number to convert one amount to all the currencies
 
-### Implementation
+## Implementation
 #### Important note - I'm designing an application as a standalone app. If we were designing this screen as a feature to Revolut's main application then the design choices probably be little different.
 
 1. View latest currency rates
@@ -49,6 +49,10 @@ We probably could also create separate gradle modules for data, usecase and pres
 to achieve better build time and code separation, but I'll skip this to save time during development
     
     
-Other things that we definitely need if this app will be in production:
+## Other things that we definitely need if this app will be in production:
 1. Analytics
 2. Crash reporting
+
+## Things that I clarify with Product Owner / Designer
+1. Color of the EditText underline. It's hard to customize that, so could we not do that?
+2. We probably want to change the maximum fraction digits in the case, where I convert 1 IDR to other currencies to get values more accurate than 0 or 0.001
