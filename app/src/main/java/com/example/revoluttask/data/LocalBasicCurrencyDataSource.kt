@@ -1,6 +1,7 @@
 package com.example.revoluttask.data
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.squareup.moshi.JsonAdapter
@@ -14,9 +15,9 @@ class LocalBasicCurrencyDataSource(
     }
 
     fun setRates(rates: List<BasicCurrencyRate>) {
-        prefs.edit()
-            .putString(RATES, jsonAdapter.toJson(rates))
-            .apply();
+        prefs.edit {
+            putString(RATES, jsonAdapter.toJson(rates))
+        }
     }
 
     // I think it may be better not to use livedata here,
@@ -33,5 +34,4 @@ class LocalBasicCurrencyDataSource(
 
         return liveData
     }
-
 }
