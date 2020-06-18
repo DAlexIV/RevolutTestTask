@@ -52,6 +52,7 @@ to achieve better build time and code separation, but I'll skip this to save tim
 ## Other things that we definitely need if this app will be in production:
 1. Analytics
 2. Crash reporting
+3. More smart logic for querying the API. We probably want to implement some kind of logarithmic pollingif there is no network
 
 ## Things that I clarify with Product Owner / Designer
 1. Color of the EditText underline. It's hard to customize that, so could we not do that?

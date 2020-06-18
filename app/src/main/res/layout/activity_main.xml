@@ -14,19 +14,32 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="bottom"
-        android:text="@string/rates_text"
+        android:text="@string/rates_text_default"
         android:textAppearance="@style/RatesStyle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rates_text"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rates_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rates_text" />
+        app:layout_constraintTop_toBottomOf="@+id/rates_text"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

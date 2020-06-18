@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">RevolutTask</string>
     <string name="rates_text">Rates updated at %1$s</string>
+    <string name="rates_text_default">Rates</string>
 
     <!-- In the production I'll probably ask backend team to provide currency_names and icons
     in the API too with an option to pass preferred language-->

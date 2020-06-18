@@ -1,6 +1,7 @@
 package com.example.revoluttask.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -22,12 +23,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         rates_recycler.layoutManager = LinearLayoutManager(this)
-        val adapter = RatesAdapter(viewModel::enterCurrencyValue)
+        val adapter = RatesAdapter(viewModel::enterCurrencyValue) { isOpened ->
+            if (isOpened) {
+                viewModel.activeMode = RatesViewModel.Companion.Mode.EDIT
+            } else {
+                viewModel.activeMode = RatesViewModel.Companion.Mode.OBSERVE
+            }
+        }
         adapter.setHasStableIds(true)
         rates_recycler.adapter = adapter
 
         viewModel.getRates().observe(this, Observer { resource ->
             if (resource.status == Resource.Status.SUCCESS) {
+                progress_bar.visibility = View.GONE;
+                rates_recycler.visibility = View.VISIBLE
+
                 (rates_recycler.adapter as RatesAdapter).rates =
                     resource.data?.rates?.toMutableList()!!
 
@@ -37,6 +47,9 @@ class MainActivity : AppCompatActivity() {
                         simpleDateFormat.format(Date(timestamp))
                     )
                 }
+            } else if (resource.status == Resource.Status.LOADING) {
+                rates_recycler.visibility = View.GONE;
+                progress_bar.visibility = View.VISIBLE
             }
         })
     }
