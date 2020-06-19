@@ -24,7 +24,7 @@ are welcome to use flags from the Internet or emojis instead.
 Please​ upload y​ our​ app ​to ​github/bitbucket/etc. an​d make sure to provide public access 
 after you share the link with us for review. 
 
-## My implementation
+## Solution
 You can download apk from the releases page to try it out.
 ![Output sample](https://github.com/DAlexIV/RevolutTestTask/raw/master/demo.gif)
 
@@ -33,7 +33,7 @@ Features:
 1. View latest currency rates
 2. Change the currency number to convert one amount to all the currencies
 
-## Implementation
+## Implementation design decisions
 #### Important note - I'm designing an application as a standalone app. If we were designing this screen as a feature to Revolut's main application then the design choices probably be little different.
 
 1. View latest currency rates
