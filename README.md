@@ -24,7 +24,8 @@ are welcome to use flags from the Internet or emojis instead.
 Please​ upload y​ our​ app ​to ​github/bitbucket/etc. an​d make sure to provide public access 
 after you share the link with us for review. 
 
-## My implemenetation
+## My implementation
+You can download apk from the releases page to try it out.
 ![Output sample](https://github.com/DAlexIV/RevolutTestTask/raw/master/demo.gif)
 
 ## Design document
