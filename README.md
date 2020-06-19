@@ -64,3 +64,4 @@ I've skipped this part due to not complex UI or business logic.
 2. We probably want to change the maximum fraction digits in the case, where I convert 1 IDR to other currencies to get values more accurate than 0 or 0.001
 3. Ask whether we need an offline mode and latest timestamp. I think yes, so I've implemented them.
 4. Ask for the loader design.
+5. Ask how we should handle errors
