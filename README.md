@@ -47,6 +47,10 @@ Features:
 
 We probably could also create separate gradle modules for data, usecase and presentation layers for this feature
 to achieve better build time and code separation, but I'll skip this to save time during development
+I've written blackbox robolectric tests to cover most application code with minimal efforts.
+They are flaky since they query real network, so in the real world, we probably want to use
+mock web server for these kind of tests. Also, it makes sense to have UI and unit tests here, but
+I've skipped this part due to not complex UI or business logic.
     
     
 ## Other things that we definitely need if this app will be in production:

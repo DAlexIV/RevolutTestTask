@@ -33,6 +33,8 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
                     updatedRates.value =
                         updateRates(selectedAmount, selectedTicker, latestNetworkState)
                 }
+            } else {
+                updatedRates.value = value
             }
         }
 

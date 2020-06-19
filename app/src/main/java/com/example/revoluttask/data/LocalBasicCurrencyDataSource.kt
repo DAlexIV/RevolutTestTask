@@ -33,8 +33,6 @@ class LocalBasicCurrencyDataSource(
                     jsonAdapter.fromJson(prefs.getString(RATES, "") ?: "")
                 )
             )
-        } else {
-            liveData.value = Resource.loading(null)
         }
 
         return liveData

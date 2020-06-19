@@ -26,13 +26,21 @@ class CurrencyRateRepoImpl(
 
     override fun getRates(): LiveData<Resource<RatesData>> {
         val mediatorLiveData = MediatorLiveData<Resource<BasicRatesData>>()
+        var successDataReceived = false
         mediatorLiveData.addSource(networkBasicCurrencyDataSource.getRates()) { value ->
             if (value.status == Resource.Status.SUCCESS) {
+                successDataReceived = true
                 localBasicCurrencyDataSource.setBasicRatesData(value.data!!);
             }
-            mediatorLiveData.value = value
+            // Don't send loading when we already sent data
+            if (!successDataReceived || value.status != Resource.Status.LOADING) {
+                mediatorLiveData.value = value
+            }
         }
         mediatorLiveData.addSource(localBasicCurrencyDataSource.getRates()) { value ->
+            if (value.status == Resource.Status.SUCCESS) {
+                successDataReceived = true
+            }
             mediatorLiveData.value = value
         }
 

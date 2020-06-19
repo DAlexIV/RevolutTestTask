@@ -1,6 +1,8 @@
 package com.example.revoluttask.ui
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.revoluttask.data.*
@@ -18,6 +20,7 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
                     .addConverterFactory(MoshiConverterFactory.create())
                     .build()
                     .create(RatesNetworkService::class.java)
+                , Handler(Looper.getMainLooper())
             )
 
             val ratesType = Types.newParameterizedType(
