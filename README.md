@@ -61,11 +61,11 @@ I've skipped this part due to not complex UI or business logic.
 ## Other things that we definitely need if this app will be in production:
 1. Analytics
 2. Crash reporting
-3. More smart logic for querying the API. We probably want to implement some kind of logarithmic pollingif there is no network
+3. More smart logic for querying the API. We probably want to implement some kind of logarithmic polling if there is no network
 
 ## Things that I clarify with Product Manager / Designer
 1. Color of the EditText underline. It's hard to customize that, so could we not do that?
-2. We probably want to change the maximum fraction digits in the case, where I convert 1 IDR to other currencies to get values more accurate than 0 or 0.001
+2. We probably want to change the maximum fraction digits in the case when I convert 1 IDR to other currencies to get values more accurate than 0 or 0.001
 3. Ask whether we need an offline mode and latest timestamp. I think yes, so I've implemented them.
 4. Ask for the loader design.
 5. Ask how we should handle errors
