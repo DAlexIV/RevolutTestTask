@@ -24,6 +24,9 @@ are welcome to use flags from the Internet or emojis instead.
 Please​ upload y​ our​ app ​to ​github/bitbucket/etc. an​d make sure to provide public access 
 after you share the link with us for review. 
 
+## My implemenetation
+![Output sample](https://github.com/DAlexIV/RevolutTestTask/raw/master/demo.gif)
+
 ## Design document
 Features:
 1. View latest currency rates
