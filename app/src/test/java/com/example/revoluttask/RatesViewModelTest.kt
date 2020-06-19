@@ -5,11 +5,11 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
-import com.example.revoluttask.data.BasicCurrencyRate
-import com.example.revoluttask.data.RatesData
 import com.example.revoluttask.data.Resource
+import com.example.revoluttask.data.model.BasicCurrencyRate
+import com.example.revoluttask.data.model.RatesData
+import com.example.revoluttask.di.ViewModelFactory
 import com.example.revoluttask.ui.RatesViewModel
-import com.example.revoluttask.ui.ViewModelFactory
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +25,8 @@ class RatesViewModelTest {
 
     @Before
     fun init() {
-        val viewModelFactory = ViewModelFactory(ApplicationProvider.getApplicationContext())
+        val viewModelFactory =
+            ViewModelFactory(ApplicationProvider.getApplicationContext())
         model = viewModelFactory.create(RatesViewModel::class.java)
     }
 
@@ -125,9 +126,7 @@ class RatesViewModelTest {
         val mockedObserver = Observer<Resource<RatesData>> { data ->
             if (data.status == Resource.Status.SUCCESS
                 && data.data?.rates?.size == 1
-                &&
-                data.data?.rates?.get(0)?.basicCurrencyRate
-                == BasicCurrencyRate("EUR", 1.0)
+                && data.data?.rates?.get(0)?.basicCurrencyRate == BasicCurrencyRate("EUR", 1.0)
             ) {
                 localDataReceived = true
             }

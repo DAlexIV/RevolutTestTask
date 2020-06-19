@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.revoluttask.DoubleExt.round
+import com.example.revoluttask.util.DoubleExt.round
 import com.example.revoluttask.data.CurrencyRateRepo
-import com.example.revoluttask.data.RatesData
+import com.example.revoluttask.data.model.RatesData
 import com.example.revoluttask.data.Resource
 
 class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() {

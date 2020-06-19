@@ -1,13 +1,11 @@
 package com.example.revoluttask.ui
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -18,7 +16,6 @@ import com.example.revoluttask.R
 import com.example.revoluttask.data.CurrencyRate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.rate_item.view.*
-import java.text.DecimalFormat
 
 
 class RatesAdapter(
@@ -92,15 +89,6 @@ class RatesAdapter(
 
         }
 
-        private fun sendOnAmountChanged() {
-            if (isNumber(itemView.amount.text.toString())) {
-                onAmountChanged(
-                    itemView.amount.text.toString().toDouble(),
-                    itemView.ticker.text.toString()
-                )
-            }
-        }
-
         fun bindCurrencyRate(currencyRate: CurrencyRate, diff: Bundle?) {
             if (diff == null || diff.containsKey(RatesDiffUtilCallback.KEY_TICKER)) {
                 itemView.ticker.text = currencyRate.basicCurrencyRate.tickerString
@@ -113,9 +101,7 @@ class RatesAdapter(
                 itemView.amount.onFocusChangeListener = null
                 itemView.amount.removeTextChangedListener(textWatcher)
 
-                val df = DecimalFormat("#")
-                df.maximumFractionDigits = 3
-                itemView.amount.setText(df.format(currencyRate.basicCurrencyRate.rate))
+                itemView.amount.setText(currencyRate.basicCurrencyRate.rate.toString())
                 itemView.amount.addTextChangedListener(textWatcher)
 
                 itemView.amount.onFocusChangeListener =
@@ -137,8 +123,6 @@ class RatesAdapter(
                     }
                     false
                 }
-
-                forwardParentTouchToChild(itemView, itemView.amount)
             }
 
             if (diff == null || diff.containsKey(RatesDiffUtilCallback.KEY_FLAG)) {
@@ -148,18 +132,13 @@ class RatesAdapter(
             }
         }
 
-        private fun forwardParentTouchToChild(parent: View, child: View) {
-            val parentRect = Rect()
-            val childRect = Rect()
-            parent.getHitRect(parentRect)
-            child.getHitRect(childRect)
-
-            childRect.left = 0
-            childRect.top = 0
-            childRect.right = parentRect.width()
-            childRect.bottom = parentRect.height()
-
-            parent.touchDelegate = TouchDelegate(childRect, child)
+        private fun sendOnAmountChanged() {
+            if (isNumber(itemView.amount.text.toString())) {
+                onAmountChanged(
+                    itemView.amount.text.toString().toDouble(),
+                    itemView.ticker.text.toString()
+                )
+            }
         }
 
         private fun isNumber(value: String): Boolean {

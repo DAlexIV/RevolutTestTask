@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.revoluttask.R
 import com.example.revoluttask.data.Resource
+import com.example.revoluttask.di.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity() {
             } else if (resource.status == Resource.Status.LOADING) {
                 rates_recycler.visibility = View.GONE;
                 progress_bar.visibility = View.VISIBLE
+            } else if (resource.status == Resource.Status.ERROR) {
+                // TODO clarify with PM
             }
         })
     }

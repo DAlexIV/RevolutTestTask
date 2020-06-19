@@ -6,6 +6,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import com.example.revoluttask.BuildConfig
 import com.example.revoluttask.R
+import com.example.revoluttask.data.local.LocalBasicCurrencyDataSource
+import com.example.revoluttask.data.model.BasicRatesData
+import com.example.revoluttask.data.model.RatesData
+import com.example.revoluttask.data.network.NetworkBasicCurrencyDataSource
 import java.util.*
 import kotlin.collections.HashMap
 
