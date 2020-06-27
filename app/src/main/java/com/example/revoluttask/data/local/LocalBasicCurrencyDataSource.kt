@@ -9,10 +9,11 @@ import com.example.revoluttask.data.Resource
 import com.example.revoluttask.data.model.BasicCurrencyRate
 import com.example.revoluttask.data.model.BasicRatesData
 import com.squareup.moshi.JsonAdapter
+import java.math.BigDecimal
 
 class LocalBasicCurrencyDataSource(
     private val prefs: SharedPreferences,
-    private val jsonAdapter: JsonAdapter<List<BasicCurrencyRate>>
+    private val jsonAdapter: JsonAdapter<List<LocalBasicCurrencyRate>>
 ) : BasicCurrencyDataSource {
     companion object {
         private const val RATES = "RATES"
@@ -21,7 +22,7 @@ class LocalBasicCurrencyDataSource(
 
     fun setBasicRatesData(basicRatesData: BasicRatesData) {
         prefs.edit {
-            putString(RATES, jsonAdapter.toJson(basicRatesData.rates))
+            putString(RATES, jsonAdapter.toJson(mapRatesToLocalRates(basicRatesData.rates)))
             putLong(TIMESTAMP, basicRatesData.timestamp)
         }
     }
@@ -34,11 +35,35 @@ class LocalBasicCurrencyDataSource(
             liveData.value = Resource.success(
                 BasicRatesData(
                     prefs.getLong(TIMESTAMP, 0),
-                    jsonAdapter.fromJson(prefs.getString(RATES, "") ?: "")
+                    mapLocalRatesToRates(
+                        jsonAdapter.fromJson(prefs.getString(RATES, "") ?: "")
+                    )
                 )
             )
         }
 
         return liveData
     }
+
+    private fun mapLocalRatesToRates(rates: List<LocalBasicCurrencyRate>?):
+            List<BasicCurrencyRate>? {
+        return rates?.map { currencyRate ->
+            BasicCurrencyRate(
+                currencyRate.tickerString,
+                BigDecimal.valueOf(currencyRate.rate)
+            )
+        }
+    }
+
+    private fun mapRatesToLocalRates(rates: List<BasicCurrencyRate>?):
+            List<LocalBasicCurrencyRate>? {
+        return rates?.map { currencyRate ->
+            LocalBasicCurrencyRate(
+                currencyRate.tickerString,
+                currencyRate.rate.toDouble()
+            )
+        }
+    }
+
+
 }

@@ -1,28 +1,23 @@
 package com.example.revoluttask.data
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
-import com.example.revoluttask.BuildConfig
-import com.example.revoluttask.R
 import com.example.revoluttask.data.local.LocalBasicCurrencyDataSource
 import com.example.revoluttask.data.model.BasicRatesData
 import com.example.revoluttask.data.model.RatesData
 import com.example.revoluttask.data.network.NetworkBasicCurrencyDataSource
-import java.util.*
-import kotlin.collections.HashMap
 
 class CurrencyRateRepoImpl(
     private val networkBasicCurrencyDataSource: NetworkBasicCurrencyDataSource,
     private val localBasicCurrencyDataSource: LocalBasicCurrencyDataSource,
-    private val context: Context
+    private val iconDataSource: IconDataSource,
+    tickers: Array<String>,
+    descriptions: Array<String>
 ) : CurrencyRateRepo {
     private val descriptionMap: MutableMap<String, String> = HashMap()
 
     init {
-        val tickers = context.resources.getStringArray(R.array.tickers)
-        val descriptions = context.resources.getStringArray(R.array.currency_names)
         tickers.forEachIndexed { index, ticker ->
             descriptionMap += ticker to descriptions[index]
         }
@@ -58,10 +53,7 @@ class CurrencyRateRepoImpl(
                         CurrencyRate(
                             basicCurrencyRate,
                             descriptionMap[basicCurrencyRate.tickerString] ?: "",
-                            context.resources.getIdentifier(
-                                basicCurrencyRate.tickerString.toLowerCase(Locale.getDefault()),
-                                "drawable", BuildConfig.APPLICATION_ID
-                            )
+                            iconDataSource.loadIconResource(basicCurrencyRate.tickerString)
                         )
                     } ?: emptyList()
 

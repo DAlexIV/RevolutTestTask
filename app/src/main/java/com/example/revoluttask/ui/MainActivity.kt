@@ -24,13 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         rates_recycler.layoutManager = LinearLayoutManager(this)
-        val adapter = RatesAdapter(viewModel::enterCurrencyValue) { isOpened ->
-            if (isOpened) {
-                viewModel.activeMode = RatesViewModel.Companion.Mode.EDIT
-            } else {
-                viewModel.activeMode = RatesViewModel.Companion.Mode.OBSERVE
-            }
-        }
+        val adapter = RatesAdapter(viewModel::enterCurrencyValue)
         adapter.setHasStableIds(true)
         rates_recycler.adapter = adapter
 

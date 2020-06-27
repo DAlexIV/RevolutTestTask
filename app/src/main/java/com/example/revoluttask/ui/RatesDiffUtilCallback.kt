@@ -23,7 +23,7 @@ class RatesDiffUtilCallback(
         val oldRate: CurrencyRate = oldRates[oldItemPosition]
         val diffBundle = Bundle()
         if (newRate.basicCurrencyRate.rate != oldRate.basicCurrencyRate.rate) {
-            diffBundle.putDouble(KEY_AMOUNT, newRate.basicCurrencyRate.rate)
+            diffBundle.putString(KEY_AMOUNT, newRate.basicCurrencyRate.rate.toPlainString())
         }
         if (newRate.basicCurrencyRate.tickerString != oldRate.basicCurrencyRate.tickerString) {
             diffBundle.putString(KEY_TICKER, newRate.basicCurrencyRate.tickerString)

@@ -3,9 +3,11 @@ package com.example.revoluttask.di
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.revoluttask.R
 import com.example.revoluttask.data.CurrencyRateRepoImpl
+import com.example.revoluttask.data.IconDataSourceImpl
 import com.example.revoluttask.data.local.LocalBasicCurrencyDataSource
-import com.example.revoluttask.data.model.BasicCurrencyRate
+import com.example.revoluttask.data.local.LocalBasicCurrencyRate
 import com.example.revoluttask.data.network.NetworkBasicCurrencyDataSource
 import com.example.revoluttask.data.network.RatesNetworkService
 import com.example.revoluttask.ui.RatesViewModel
@@ -28,7 +30,7 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
 
             val ratesType = Types.newParameterizedType(
                 List::class.java,
-                BasicCurrencyRate::class.java
+                LocalBasicCurrencyRate::class.java
             )
             val moshi = Moshi.Builder().build()
             val localDataSource = LocalBasicCurrencyDataSource(
@@ -36,8 +38,15 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
                 moshi.adapter(ratesType)
             )
 
-            val currencyRateRepo =
-                CurrencyRateRepoImpl(networkDataSource, localDataSource, applicationContext)
+            val iconDataSource = IconDataSourceImpl(applicationContext)
+
+            val tickers = applicationContext.resources.getStringArray(R.array.tickers)
+            val descriptions = applicationContext.resources.getStringArray(R.array.currency_names)
+
+            val currencyRateRepo = CurrencyRateRepoImpl(
+                networkDataSource, localDataSource, iconDataSource,
+                tickers, descriptions
+            )
 
             return RatesViewModel(currencyRateRepo) as T
         }

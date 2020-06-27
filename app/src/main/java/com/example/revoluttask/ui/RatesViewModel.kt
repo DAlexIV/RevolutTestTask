@@ -7,20 +7,15 @@ import androidx.lifecycle.ViewModel
 import com.example.revoluttask.data.CurrencyRateRepo
 import com.example.revoluttask.data.Resource
 import com.example.revoluttask.data.model.RatesData
-import com.example.revoluttask.util.DoubleExt.round
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 
 class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() {
     private val manuallyEnteredValues = MutableLiveData<Resource<RatesData>>()
     private var latestNetworkState: RatesData? = null
     private var selectedTicker: String? = null
-    private var selectedAmount: Double? = null
-    var activeMode = Mode.OBSERVE
-
-    companion object {
-        enum class Mode {
-            OBSERVE, EDIT
-        }
-    }
+    private var selectedAmount: BigDecimal? = null
 
     fun getRates(): LiveData<Resource<RatesData>> {
         val updatedRates = MediatorLiveData<Resource<RatesData>>()
@@ -29,10 +24,8 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
         updatedRates.addSource(currencyRates.getRates()) { value ->
             if (value.status == Resource.Status.SUCCESS) {
                 latestNetworkState = value.data
-                if (activeMode == Mode.OBSERVE) {
-                    updatedRates.value =
-                        updateRates(selectedAmount, selectedTicker, latestNetworkState)
-                }
+                updatedRates.value =
+                    updateRates(selectedAmount, selectedTicker, latestNetworkState)
             } else {
                 updatedRates.value = value
             }
@@ -45,14 +38,18 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
         return updatedRates
     }
 
-    fun enterCurrencyValue(value: Double, tickerString: String) {
+    fun enterCurrencyValue(value: BigDecimal, tickerString: String) {
         this.selectedAmount = value
         this.selectedTicker = tickerString
         manuallyEnteredValues.value =
             updateRates(selectedAmount, selectedTicker, latestNetworkState)
     }
 
-    private fun updateRates(value: Double?, tickerString: String?, latestNetworkState: RatesData?)
+    private fun updateRates(
+        value: BigDecimal?,
+        tickerString: String?,
+        latestNetworkState: RatesData?
+    )
             : Resource<RatesData> {
         if (latestNetworkState == null) {
             throw IllegalStateException("Impossible to convert amount without rates")
@@ -66,7 +63,7 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
                     currencyRate.basicCurrencyRate.tickerString == tickerString
                 }.basicCurrencyRate.rate
 
-            val coef = value / oldValue
+            val coef = value.divide(oldValue, 3, RoundingMode.HALF_UP)
             val updatedRates = latestNetworkState.rates.map { currencyRate ->
                 val newRate =
                     // Avoid receiving better network value while we perform click
@@ -74,8 +71,12 @@ class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() 
                     else (currencyRate.basicCurrencyRate.rate * coef)
                 currencyRate.copy(
                     basicCurrencyRate =
-                    currencyRate.basicCurrencyRate.copy(rate = newRate.round(3))
+                    currencyRate.basicCurrencyRate.copy(
+                        rate =
+                        newRate.round(MathContext(3, RoundingMode.HALF_UP))
+                    )
                 )
+
             }.sortedByDescending { currencyRate ->
                 if (currencyRate.basicCurrencyRate.tickerString == tickerString) 1 else 0
             }

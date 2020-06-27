@@ -16,11 +16,11 @@ import com.example.revoluttask.R
 import com.example.revoluttask.data.CurrencyRate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.rate_item.view.*
+import java.math.BigDecimal
 
 
 class RatesAdapter(
-    private val onAmountChanged: (value: Double, ticker: String) -> Unit,
-    private val onEditTextStatusChanged: (isOpened: Boolean) -> Unit
+    private val onAmountChanged: (value: BigDecimal, ticker: String) -> Unit
 ) :
     RecyclerView.Adapter<RatesAdapter.RatesViewHolder>() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
@@ -34,14 +34,14 @@ class RatesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RatesViewHolder {
         val ratesView =
             LayoutInflater.from(parent.context).inflate(R.layout.rate_item, parent, false)
-        return RatesViewHolder(ratesView, mainThreadHandler, { value, ticker ->
+        return RatesViewHolder(ratesView, mainThreadHandler) { value, ticker ->
             val changeIndex =
                 rates.indexOfFirst { rate -> rate.basicCurrencyRate.tickerString == ticker }
             val oldValue = rates[changeIndex]
             rates[changeIndex] =
                 oldValue.copy(basicCurrencyRate = oldValue.basicCurrencyRate.copy(rate = value))
             onAmountChanged.invoke(value, ticker)
-        }, onEditTextStatusChanged)
+        }
     }
 
     override fun getItemCount() = rates.size
@@ -72,8 +72,7 @@ class RatesAdapter(
     class RatesViewHolder(
         override val containerView: View,
         private val mainThreadHandler: Handler,
-        private val onAmountChanged: (value: Double, ticker: String) -> Unit,
-        private val onEditTextStatusChanged: (isOpened: Boolean) -> Unit
+        private val onAmountChanged: (value: BigDecimal, ticker: String) -> Unit
     ) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
         private val textWatcher = object : TextWatcher {
@@ -101,7 +100,7 @@ class RatesAdapter(
                 itemView.amount.onFocusChangeListener = null
                 itemView.amount.removeTextChangedListener(textWatcher)
 
-                itemView.amount.setText(currencyRate.basicCurrencyRate.rate.toString())
+                itemView.amount.setText(currencyRate.basicCurrencyRate.rate.toPlainString())
                 itemView.amount.addTextChangedListener(textWatcher)
 
                 itemView.amount.onFocusChangeListener =
@@ -109,7 +108,6 @@ class RatesAdapter(
                         // We want to wait for recycler scroll to avoid the following exception
                         // "Cannot call this method while RecyclerView is computing a layout"
                         mainThreadHandler.post {
-                            onEditTextStatusChanged(hasFocus)
                             if (hasFocus) {
                                 sendOnAmountChanged()
                             }
@@ -118,7 +116,6 @@ class RatesAdapter(
 
                 itemView.amount.setOnEditorActionListener { _, actionId, _ ->
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        onEditTextStatusChanged(false)
                         sendOnAmountChanged()
                     }
                     false
@@ -135,7 +132,7 @@ class RatesAdapter(
         private fun sendOnAmountChanged() {
             if (isNumber(itemView.amount.text.toString())) {
                 onAmountChanged(
-                    itemView.amount.text.toString().toDouble(),
+                    BigDecimal(itemView.amount.text.toString()),
                     itemView.ticker.text.toString()
                 )
             }

@@ -16,6 +16,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLooper.runUiThreadTasksIncludingDelayedTasks
+import java.math.BigDecimal
 
 
 @Config(sdk = [Build.VERSION_CODES.P])
@@ -76,7 +77,7 @@ class RatesViewModelTest {
             if (data.status == Resource.Status.SUCCESS) {
                 data.data?.rates?.forEach { rate ->
                     if (rate.basicCurrencyRate.tickerString == "RUB"
-                        && rate.basicCurrencyRate.rate == 100.0
+                        && rate.basicCurrencyRate.rate.compareTo(BigDecimal("100.0")) == 0
                     ) {
                         correctManualDataGot = true
                     }
@@ -88,28 +89,9 @@ class RatesViewModelTest {
         Thread.sleep(10000)
         runUiThreadTasksIncludingDelayedTasks()
 
-        model.enterCurrencyValue(100.0, "RUB")
+        model.enterCurrencyValue(BigDecimal("100.0"), "RUB")
         runUiThreadTasksIncludingDelayedTasks()
         assert(correctManualDataGot)
-    }
-
-    @Test
-    fun changeModeTest() {
-        var dataReceived = 0
-        val mockedObserver = Observer<Resource<RatesData>> {
-            ++dataReceived
-        }
-        model.getRates().observeForever(mockedObserver)
-
-        Thread.sleep(10000)
-        runUiThreadTasksIncludingDelayedTasks()
-        model.activeMode = RatesViewModel.Companion.Mode.EDIT
-        dataReceived = 0
-
-        Thread.sleep(10000)
-        runUiThreadTasksIncludingDelayedTasks()
-
-        assert(dataReceived == 0)
     }
 
     @Test
@@ -126,7 +108,10 @@ class RatesViewModelTest {
         val mockedObserver = Observer<Resource<RatesData>> { data ->
             if (data.status == Resource.Status.SUCCESS
                 && data.data?.rates?.size == 1
-                && data.data?.rates?.get(0)?.basicCurrencyRate == BasicCurrencyRate("EUR", 1.0)
+                && data.data?.rates?.get(0)?.basicCurrencyRate == BasicCurrencyRate(
+                    "EUR",
+                    BigDecimal("1.0")
+                )
             ) {
                 localDataReceived = true
             }

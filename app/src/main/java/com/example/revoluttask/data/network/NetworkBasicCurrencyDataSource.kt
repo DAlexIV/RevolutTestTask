@@ -9,6 +9,7 @@ import com.example.revoluttask.data.model.BasicRatesData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.math.BigDecimal
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -48,10 +49,21 @@ class NetworkBasicCurrencyDataSource(
                     rates.value = Resource.error("Failed to load rates", null)
                 } else {
                     val responseRates = (response.body()?.rates?.toList() ?: emptyList())
-                        .map { (currencyString, rate) -> BasicCurrencyRate(currencyString, rate) }
+                        .map { (currencyString, rate) ->
+                            BasicCurrencyRate(
+                                currencyString,
+                                BigDecimal.valueOf(rate)
+                            )
+                        }
                         .toMutableList()
                     responseRates
-                        .add(0, BasicCurrencyRate(response.body()?.baseCurrencyString ?: "", 1.0))
+                        .add(
+                            0,
+                            BasicCurrencyRate(
+                                response.body()?.baseCurrencyString ?: "",
+                                BigDecimal("1.0")
+                            )
+                        )
                     rates.postValue(
                         Resource.success(
                             BasicRatesData(System.currentTimeMillis(), responseRates)
