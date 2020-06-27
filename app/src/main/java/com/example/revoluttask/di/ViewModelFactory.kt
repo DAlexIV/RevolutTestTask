@@ -1,8 +1,6 @@
 package com.example.revoluttask.di
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.revoluttask.data.CurrencyRateRepoImpl
@@ -26,14 +24,13 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
                         .addConverterFactory(MoshiConverterFactory.create())
                         .build()
                         .create(RatesNetworkService::class.java)
-                    , Handler(Looper.getMainLooper())
                 )
 
             val ratesType = Types.newParameterizedType(
                 List::class.java,
                 BasicCurrencyRate::class.java
             )
-            val moshi = Moshi.Builder().build();
+            val moshi = Moshi.Builder().build()
             val localDataSource = LocalBasicCurrencyDataSource(
                 applicationContext.getSharedPreferences("RATES", Context.MODE_PRIVATE),
                 moshi.adapter(ratesType)

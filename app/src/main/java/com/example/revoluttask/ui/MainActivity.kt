@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getRates().observe(this, Observer { resource ->
             if (resource.status == Resource.Status.SUCCESS) {
-                progress_bar.visibility = View.GONE;
+                progress_bar.visibility = View.GONE
                 rates_recycler.visibility = View.VISIBLE
 
                 (rates_recycler.adapter as RatesAdapter).rates =
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             } else if (resource.status == Resource.Status.LOADING) {
-                rates_recycler.visibility = View.GONE;
+                rates_recycler.visibility = View.GONE
                 progress_bar.visibility = View.VISIBLE
             } else if (resource.status == Resource.Status.ERROR) {
                 // TODO clarify with PM

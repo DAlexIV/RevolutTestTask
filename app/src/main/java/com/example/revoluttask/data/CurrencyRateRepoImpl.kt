@@ -34,7 +34,7 @@ class CurrencyRateRepoImpl(
         mediatorLiveData.addSource(networkBasicCurrencyDataSource.getRates()) { value ->
             if (value.status == Resource.Status.SUCCESS) {
                 successDataReceived = true
-                localBasicCurrencyDataSource.setBasicRatesData(value.data!!);
+                localBasicCurrencyDataSource.setBasicRatesData(value.data!!)
             }
             // Don't send loading when we already sent data
             if (!successDataReceived || value.status != Resource.Status.LOADING) {
@@ -69,6 +69,6 @@ class CurrencyRateRepoImpl(
                     Resource.success(RatesData(data.timestamp, currencyRateList))
                 }
             }
-        };
+        }
     }
 }

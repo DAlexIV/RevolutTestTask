@@ -1,6 +1,5 @@
 package com.example.revoluttask.data.network
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.revoluttask.data.BasicCurrencyDataSource
@@ -15,15 +14,14 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class NetworkBasicCurrencyDataSource(
-    private val ratesNetworkService: RatesNetworkService,
-    private val mainThreadHandler: Handler
+    private val ratesNetworkService: RatesNetworkService
 ) :
     BasicCurrencyDataSource {
     private var executor: ScheduledExecutorService? = null
 
     override fun getRates(): LiveData<Resource<BasicRatesData>> {
         val rates = MutableLiveData<Resource<BasicRatesData>>()
-        mainThreadHandler.post { rates.value = Resource.loading(null) }
+        rates.postValue(Resource.loading(null))
 
         executor?.shutdownNow()
         executor = Executors.newSingleThreadScheduledExecutor()
@@ -54,15 +52,11 @@ class NetworkBasicCurrencyDataSource(
                         .toMutableList()
                     responseRates
                         .add(0, BasicCurrencyRate(response.body()?.baseCurrencyString ?: "", 1.0))
-                    mainThreadHandler.post {
-                        rates.value =
-                            Resource.success(
-                                BasicRatesData(
-                                    System.currentTimeMillis(),
-                                    responseRates
-                                )
-                            )
-                    }
+                    rates.postValue(
+                        Resource.success(
+                            BasicRatesData(System.currentTimeMillis(), responseRates)
+                        )
+                    )
                 }
             }
         }

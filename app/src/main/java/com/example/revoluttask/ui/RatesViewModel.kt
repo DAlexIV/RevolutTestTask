@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.revoluttask.util.DoubleExt.round
 import com.example.revoluttask.data.CurrencyRateRepo
-import com.example.revoluttask.data.model.RatesData
 import com.example.revoluttask.data.Resource
+import com.example.revoluttask.data.model.RatesData
+import com.example.revoluttask.util.DoubleExt.round
 
 class RatesViewModel(private val currencyRates: CurrencyRateRepo) : ViewModel() {
     private val manuallyEnteredValues = MutableLiveData<Resource<RatesData>>()
