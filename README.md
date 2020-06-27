@@ -72,6 +72,8 @@ I've skipped this part due to not complex UI or business logic.
 
 ## Feedback and how I addressed that
 > 1. Some SOLID principles are violated
+
+
 I think here you are implying that these two principles are violated:
 Single-responsibility principle
     A class should only have a single responsibility, that is, only changes to one part
@@ -89,24 +91,44 @@ we also don't have different viewmodels for the same UI then the value of that i
 really clear to me.
 So my point is that I think that we need to follow SOLID, but we also need to keep in mind other
 principles, like KISS for example.
+
+
 > 2. Rates are not updated every second
+
+
 Sorry, I've understood the task wrong. I thought that we should freeze rates while we are in the
 editing mode. I've watched Youtube video again and found that we shouldn't do that, so I've removed
 this feature from the code.
+
+
 > 3. We find it to be not the best decision to use a handler in the data layer.
->    For posting live data value on a Ui thread you can use MutableLiveData.postValue()
+
+
+For posting live data value on a Ui thread you can use MutableLiveData.postValue()
 Replaced handler at the data layer with MutableLiveData.postValue()
 Handler at the UI layer still left, but I think it's fine, since Handler is an UI tool itself.
+
+
 > 4. You use context in the data layer to get an android resource and set it to data entity.
->   We are not sure that data entity should know something about ui layer requirement (icon)
+
+
+We are not sure that data entity should know something about ui layer requirement (icon)
 Actually I think that we can treat iconId as a data and since it's not an Android class itself, it's
 just a reference to resource. But I agree with you that CurrencyRateRepo shouldn't interact with
 the whole Context while it needs to do just couple operations. I've removed CurrencyRateRepo context
 dependency by creation of IconDataSource and passing tickers and descriptions as a parameters.
-5. Amount is Double
+
+
+> 5. Amount is Double
+
+
 I also thought that maybe it's better to use BigDecimal for it's better precision,
 but since we are not doing some mission-critical calculations then I've got away with Double.
 After your comment I've moved to BigDecimal since it's cheep to implemeent and
 who knows how this app might evolve :)
-6. No Ui tests
+
+
+> 6. No Ui tests
+
+
 I was also lazy to write them for the test application. I've added them now.
