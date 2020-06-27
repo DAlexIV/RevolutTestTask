@@ -101,18 +101,16 @@ editing mode. I've watched Youtube video again and found that we shouldn't do th
 this feature from the code.
 
 
-> 3. We find it to be not the best decision to use a handler in the data layer.
+> 3. We find it to be not the best decision to use a handler in the data layer. For posting live data value on a Ui thread you can use MutableLiveData.postValue()
 
 
-For posting live data value on a Ui thread you can use MutableLiveData.postValue()
 Replaced handler at the data layer with MutableLiveData.postValue()
 Handler at the UI layer still left, but I think it's fine, since Handler is an UI tool itself.
 
 
-> 4. You use context in the data layer to get an android resource and set it to data entity.
+> 4. You use context in the data layer to get an android resource and set it to data entity. We are not sure that data entity should know something about ui layer requirement (icon)
 
 
-We are not sure that data entity should know something about ui layer requirement (icon)
 Actually I think that we can treat iconId as a data and since it's not an Android class itself, it's
 just a reference to resource. But I agree with you that CurrencyRateRepo shouldn't interact with
 the whole Context while it needs to do just couple operations. I've removed CurrencyRateRepo context
