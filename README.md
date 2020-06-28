@@ -75,20 +75,26 @@ I've skipped this part due to not complex UI or business logic.
 
 
 I think here you are implying that these two principles are violated:
-Single-responsibility principle
-    A class should only have a single responsibility, that is, only changes to one part
+
+
+Single-responsibility principle: A class should only have a single responsibility, that is, only changes to one part
     of the software's specification should be able to affect the specification of the class.
+    
+    
 Here you could argue that CurrencyRateRepoImpl has two responsibilities - merge the data from the
 local and network data sources and add descriptions and icons for this data.
 I think here we violating that principle but we gaining in the lower code complexity. We could
-probably move some of this logic to the usecase, but I think it will made code just harder to read
+probably move some of this logic to the usecase, but I think it will make code just harder to read
 without adding some pros.
-Dependency inversion principle
-    "One should depend upon abstractions, [not] concretions."
+
+
+Dependency inversion principle "One should depend upon abstractions, [not] concretions."
+
+
 Here you could say that we are referencing RatesViewModel directly without a proxy interface which
 contradicts this principle. I think that since we don't have tests that stub viewmodel and
 we also don't have different viewmodels for the same UI then the value of that interface is not
-really clear to me.
+clear to me.
 So my point is that I think that we need to follow SOLID, but we also need to keep in mind other
 principles, like KISS for example.
 
@@ -105,16 +111,16 @@ this feature from the code.
 
 
 Replaced handler at the data layer with MutableLiveData.postValue()
-Handler at the UI layer still left, but I think it's fine, since Handler is an UI tool itself.
+Handler at the UI layer still left, but I think it's fine since Handler is a UI tool itself.
 
 
-> 4. You use context in the data layer to get an android resource and set it to data entity. We are not sure that data entity should know something about ui layer requirement (icon)
+> 4. You use context in the data layer to get an android resource and set it to the data entity. We are not sure that data entity should know something about UI layer requirement (icon)
 
 
-Actually I think that we can treat iconId as a data and since it's not an Android class itself, it's
-just a reference to resource. But I agree with you that CurrencyRateRepo shouldn't interact with
-the whole Context while it needs to do just couple operations. I've removed CurrencyRateRepo context
-dependency by creation of IconDataSource and passing tickers and descriptions as a parameters.
+Actually, I think that we can treat iconId as a data and since it's not an Android class itself, it's
+just a reference to a resource. But I agree with you that CurrencyRateRepo shouldn't interact with
+the whole Context while it needs to do just a couple of operations. I've removed CurrencyRateRepo context
+dependency by the creation of IconDataSource and passing tickers and descriptions as parameters.
 
 
 > 5. Amount is Double
@@ -122,7 +128,7 @@ dependency by creation of IconDataSource and passing tickers and descriptions as
 
 I also thought that maybe it's better to use BigDecimal for it's better precision,
 but since we are not doing some mission-critical calculations then I've got away with Double.
-After your comment I've moved to BigDecimal since it's cheep to implemeent and
+After your comment, I've moved to BigDecimal since it's cheap to implement and
 who knows how this app might evolve :)
 
 
